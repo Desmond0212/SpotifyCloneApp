@@ -20,6 +20,8 @@ final class APICaller {
         case failedToGetData
     }
     
+    // MARK: - Profile
+    
     public func getCurrentUserProfile(completion: @escaping (Result<UserProfile, Error>) -> Void) {
         createRequest(with: URL(string: Constants.baseAPIURL + "/me"), type: .GET) { baseRequest in
             let task = URLSession.shared.dataTask(with: baseRequest) { data, _, error in
@@ -94,7 +96,7 @@ final class APICaller {
         }
     }
     
-    // MARK: - Profile
+    // MARK: - New Release
     
     public func getNewReleases(completion: @escaping ((Result<NewReleaseResponse, Error>)) -> Void) {
         createRequest(with: URL(string: Constants.baseAPIURL + "/browse/new-releases?limit=50"), type: .GET) { request in
