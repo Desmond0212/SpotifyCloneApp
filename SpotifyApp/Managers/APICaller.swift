@@ -191,6 +191,57 @@ final class APICaller {
         }
     }
     
+    // MARK: - Category
+    
+    public func getCategories(completion: @escaping (Result<[Category], Error>) -> Void) {
+        createRequest(with: URL(string: Constants.baseAPIURL + "/browse/categories?limit=50"),
+                      type: .GET) { request in
+            let task = URLSession.shared.dataTask(with: request) { data, _, error in
+                guard let data = data, error == nil else {
+                    completion(.failure(APIError.failedToGetData))
+                    return
+                }
+                
+                do {
+                    let result = try JSONDecoder().decode(AllCategoriesResponse.self, from: data)
+                    //JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                    print("getCategories API: \(result.categories.items)")
+                    completion(.success(result.categories.items))
+                }
+                catch {
+                    print("getCategories API: \(error.localizedDescription)")
+                    completion(.failure(error))
+                }
+            }
+            task.resume()
+        }
+    }
+    
+    public func getCategoryPlaylists(category: Category, completion: @escaping (Result<[Playlist], Error>) -> Void) {
+        createRequest(with: URL(string: Constants.baseAPIURL + "/browse/categories/\(category.id)/playlists?limit=50"),
+                      type: .GET) { request in
+            let task = URLSession.shared.dataTask(with: request) { data, _, error in
+                guard let data = data, error == nil else {
+                    completion(.failure(APIError.failedToGetData))
+                    return
+                }
+                
+                do {
+                    let result = try JSONDecoder().decode(FeaturedPlaylistsResponse.self, from: data)
+                    //JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                    let playlists = result.playlists.items
+                    print("getCategoryPlaylists API: \(playlists)")
+                    completion(.success(playlists))
+                }
+                catch {
+                    print("getCategoryPlaylists API: \(error.localizedDescription)")
+                    completion(.failure(error))
+                }
+            }
+            task.resume()
+        }
+    }
+    
     // MARK: - Private
     
     enum HTTPMethod: String {
