@@ -89,8 +89,12 @@ class AlbumViewController: UIViewController {
                 print("AlbumViewController: saveAlbum API - Saved: \(success)")
                 
                 if success {
+                    HapticsManager.shared.vibrate(for: .success)
                     // Sending Broadcast Notification Service
                     NotificationCenter.default.post(name: .albumSavedNotification, object: nil)
+                }
+                else {
+                    HapticsManager.shared.vibrate(for: .error)
                 }
             }
         }))
