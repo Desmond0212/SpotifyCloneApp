@@ -59,3 +59,8 @@ extension String {
         return DateFormatter.displayDateFormatter.string(from: date)
     }
 }
+
+// For Broadcast Notification Service (Adding Album and Refresh Album List)
+extension Notification.Name {
+    static let albumSavedNotification = Notification.Name("albumSavedNotification")
+}
